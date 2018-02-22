@@ -13,6 +13,7 @@ contract Main {
   }
 
   Document[] documents;
+  mapping(address => uint[]) _authorOfDocuments;
 
   function documentAuthors(uint documentId) public view returns (address[]) {
     return documents[documentId].authors;
@@ -24,6 +25,10 @@ contract Main {
 
   function documentVersionCount(uint documentId) public view returns (uint) {
     return documents[documentId].versions.length;
+  }
+
+  function authorOfDocuments() public view returns (uint[]) {
+    return _authorOfDocuments[msg.sender];
   }
 
   function documentVersion(uint documentId, uint versionId) public view
@@ -38,9 +43,11 @@ contract Main {
     d.authors = authors;
     for (uint i = 0; i < authors.length; i++) {
       d.isAuthor[authors[i]] = true;
+       _authorOfDocuments[authors[i]].push(documents.length - 1);
     }
     d.authors.push(msg.sender);
     d.isAuthor[msg.sender] = true;
+    _authorOfDocuments[msg.sender].push(documents.length - 1);
     d.versions.push(Version({ content: content, author: msg.sender }));
   }
 

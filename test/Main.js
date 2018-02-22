@@ -11,6 +11,15 @@ contract('Main', (accounts) => {
       '0x1230000000000000000000000000000000000000000000000000000000000000',
       accounts[0]
     ]);
+    assert.deepEqual((await i.authorOfDocuments()).map(i => +i), [0]);
+  });
+
+  it('create documents', async () => {
+    const i = await Main.new();
+    await i.createDocument(0, []);
+    await i.createDocument(0, [], { from: accounts[1] });
+    assert.deepEqual((await i.authorOfDocuments()).map(i => +i), [0]);
+    assert.deepEqual((await i.authorOfDocuments({ from: accounts[1] })).map(i => +i), [1]);
   });
 
   it('add version', async () => {
