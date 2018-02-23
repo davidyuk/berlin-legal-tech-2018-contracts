@@ -1,0 +1,30 @@
+{
+  "name": "berlin-legal-tech-2018-contracts",
+  "version": "0.0.0",
+  "description": "",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "testrpc > /dev/null & truffle test",
+    "test-watch": "nodemon -e sol,js --exec \"npm test\"",
+    "migrate-kovan": "truffle migrate --network kovan"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidyuk/berlin-legal-tech-2018-contracts.git"
+  },
+  "author": "Denis Davidyuk <denis_davidyuk@hotmail.com>",
+  "bugs": {
+    "url": "https://github.com/davidyuk/berlin-legal-tech-2018-contracts/issues"
+  },
+  "homepage": "https://github.com/davidyuk/berlin-legal-tech-2018-contracts#readme",
+  "devDependencies": {
+    "ethereumjs-testrpc": "^4.1.3",
+    "lodash": "^4.17.4",
+    "nodemon": "^1.12.6",
+    "truffle": "^4.0.1",
+    "truffle-hdwallet-provider": "0.0.3",
+    "web3": "^1.0.0-beta.26"
+  }
+}
