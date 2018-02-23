@@ -3,7 +3,7 @@ pragma solidity ^0.4.17;
 contract Main {
   struct Version {
     bytes32 content;
-    address author;
+    address[] signedBy;
   }
 
   struct Document {
@@ -32,23 +32,24 @@ contract Main {
   }
 
   function documentVersion(uint documentId, uint versionId) public view
-  returns (bytes32 content, address author) {
+  returns (bytes32 content, address[] signedBy) {
     content = documents[documentId].versions[versionId].content;
-    author = documents[documentId].versions[versionId].author;
+    signedBy = documents[documentId].versions[versionId].signedBy;
   }
 
   function createDocument(bytes32 content, address[] authors) public {
+    uint documentId = documents.length;
     documents.length += 1;
-    Document storage d = documents[documents.length - 1];
+    Document storage d = documents[documentId];
     d.authors = authors;
     for (uint i = 0; i < authors.length; i++) {
       d.isAuthor[authors[i]] = true;
-       _authorOfDocuments[authors[i]].push(documents.length - 1);
+       _authorOfDocuments[authors[i]].push(documentId);
     }
     d.authors.push(msg.sender);
     d.isAuthor[msg.sender] = true;
-    _authorOfDocuments[msg.sender].push(documents.length - 1);
-    d.versions.push(Version({ content: content, author: msg.sender }));
+    _authorOfDocuments[msg.sender].push(documentId);
+    addVersion(documentId, content);
   }
 
   modifier author(uint documentId) {
@@ -57,6 +58,14 @@ contract Main {
   }
 
   function addVersion(uint documentId, bytes32 content) public author(documentId) {
-    documents[documentId].versions.push(Version({ content: content, author: msg.sender }));
+    Document storage d = documents[documentId];
+    uint versionId = d.versions.length;
+    d.versions.length += 1;
+    d.versions[versionId].content = content;
+    signVersion(documentId, versionId);
+  }
+
+  function signVersion(uint documentId, uint versionId) public author(documentId) {
+    documents[documentId].versions[versionId].signedBy.push(msg.sender);
   }
 }

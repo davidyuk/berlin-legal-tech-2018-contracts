@@ -9,7 +9,7 @@ contract('Main', (accounts) => {
     assert.equal(await i.documentVersionCount(0), 1);
     assert.deepEqual(await i.documentVersion(0, 0), [
       '0x1230000000000000000000000000000000000000000000000000000000000000',
-      accounts[0]
+      [accounts[0]]
     ]);
     assert.deepEqual((await i.authorOfDocuments()).map(i => +i), [0]);
   });
@@ -29,7 +29,17 @@ contract('Main', (accounts) => {
     assert.equal(await i.documentVersionCount(0), 2);
     assert.deepEqual(await i.documentVersion(0, 1), [
       '0x1230000000000000000000000000000000000000000000000000000000000000',
-      accounts[1]
+      [accounts[1]]
+    ]);
+  });
+
+  it('sign version', async () => {
+    const i = await Main.new();
+    await i.createDocument(0, [accounts[1]]);
+    await i.signVersion(0, 0, { from: accounts[1] });
+    assert.deepEqual(await i.documentVersion(0, 0), [
+      '0x0000000000000000000000000000000000000000000000000000000000000000',
+      [accounts[0], accounts[1]]
     ]);
   });
 });
