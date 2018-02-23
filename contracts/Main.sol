@@ -19,10 +19,6 @@ contract Main {
     return documents[documentId].authors;
   }
 
-  function isDocumentAuthor(uint documentId) public view returns (bool) {
-    return documents[documentId].isAuthor[msg.sender];
-  }
-
   function documentVersionCount(uint documentId) public view returns (uint) {
     return documents[documentId].versions.length;
   }
